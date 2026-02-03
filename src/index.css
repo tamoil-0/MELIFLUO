@@ -21,6 +21,13 @@
   --spacing-section: 8rem;
 }
 
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  :root {
+    --spacing-section: 4rem;
+  }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -34,6 +41,7 @@ body {
   line-height: 1.7;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  font-size: 16px;
 }
 
 h1,
@@ -70,28 +78,24 @@ button {
   padding: 0 2rem;
 }
 
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1.5rem;
+    overflow-x: hidden;
+  }
+}
+
 .section {
   padding: var(--spacing-section) 0;
 }
 
-.text-gradient {
-  background: linear-gradient(to right, #fff, #999);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.text-gold {
-  color: var(--col-accent);
-}
-
 .heading-xl {
-  font-size: clamp(3.5rem, 6vw, 6rem);
+  font-size: clamp(2.5rem, 8vw, 6rem);
   letter-spacing: -0.02em;
 }
 
 .heading-lg {
-  font-size: clamp(2.5rem, 4vw, 4rem);
+  font-size: clamp(2rem, 5vw, 4rem);
 }
 
 .btn-primary {
@@ -132,6 +136,37 @@ button {
   color: var(--col-accent);
 }
 
+/* Mobile Utilities */
+.hidden-mobile {
+  display: flex;
+}
+
+.show-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+
+  .show-mobile {
+    display: block !important;
+  }
+
+  .btn-primary,
+  .btn-outline {
+    width: 100%;
+    /* Full width buttons on mobile */
+    text-align: center;
+    padding: 1rem 1.5rem;
+  }
+
+  .heading-xl {
+    line-height: 1.2;
+  }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
@@ -144,21 +179,4 @@ button {
 ::-webkit-scrollbar-thumb {
   background: #333;
   border-radius: 3px;
-}
-
-/* Animations */
-.fade-in-up {
-  animation: fadeInUp 0.8s ease-out forwards;
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
