@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Palette - Refined Dark Premium */
+  --col-bg: #0a0a0a;
+  --col-surface: #141414;
+  --col-surface-highlight: #1f1f1f;
+
+  --col-text-main: #f5f5f5;
+  --col-text-muted: #a3a3a3;
+
+  --col-accent: #c6a87c;
+  /* Muted Gold/Beige */
+  --col-accent-glow: rgba(198, 168, 124, 0.2);
+  --col-wood: #8b5a2b;
+  /* Rich Wood */
+
+  --spacing-section: 8rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--col-bg);
+  color: var(--col-text-main);
+  line-height: 1.7;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font-family: var(--font-body);
+  border: none;
+  cursor: pointer;
+}
+
+/* Utilities */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section {
+  padding: var(--spacing-section) 0;
+}
+
+.text-gradient {
+  background: linear-gradient(to right, #fff, #999);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gold {
+  color: var(--col-accent);
+}
+
+.heading-xl {
+  font-size: clamp(3.5rem, 6vw, 6rem);
+  letter-spacing: -0.02em;
+}
+
+.heading-lg {
+  font-size: clamp(2.5rem, 4vw, 4rem);
+}
+
+.btn-primary {
+  background: var(--col-accent);
+  color: #000;
+  padding: 1.2rem 2.5rem;
+  border-radius: 2px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+
+.btn-primary:hover {
+  background: #deb887;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -10px var(--col-accent-glow);
+}
+
+.btn-outline {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: transparent;
+  color: var(--col-text-main);
+  padding: 1.2rem 2.5rem;
+  border-radius: 2px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.95rem;
+}
+
+.btn-outline:hover {
+  border-color: var(--col-accent);
+  color: var(--col-accent);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--col-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+/* Animations */
+.fade-in-up {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
