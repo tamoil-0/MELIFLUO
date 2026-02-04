@@ -66,147 +66,135 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Nav Overlay */}
-      <AnimatePresence>
-        {menuOpen && (
-          <>
-            {/* Background Overlay with blur */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+      {/* Mobile Nav Overlay - SIMPLE Y FUNCIONAL */}
+      {menuOpen && (
+        <div 
+          style={{ 
+            position: 'fixed', 
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(0, 0, 0, 0.97)',
+            zIndex: 9999,
+            display: 'flex',
+            flexDirection: 'column',
+            padding: '2rem 1.5rem',
+            overflowY: 'auto'
+          }}
+        >
+          {/* Header con botón cerrar */}
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center',
+            marginBottom: '3rem',
+            paddingBottom: '1rem',
+            borderBottom: '2px solid var(--col-accent)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <img src="/logo.png" alt="Meliflu" style={{ height: '40px' }} />
+              <span style={{ 
+                fontSize: '1.8rem', 
+                fontFamily: 'var(--font-heading)', 
+                fontWeight: 700, 
+                color: 'white' 
+              }}>
+                Meliflu
+              </span>
+            </div>
+            <button 
               onClick={() => setMenuOpen(false)}
               style={{ 
-                position: 'fixed', 
-                inset: 0, 
-                background: 'rgba(0, 0, 0, 0.95)', 
-                backdropFilter: 'blur(20px)',
-                zIndex: 998
-              }}
-            />
-            
-            {/* Menu Content */}
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              style={{ 
-                position: 'fixed',
-                top: 0,
-                right: 0,
-                bottom: 0,
-                width: '85%',
-                maxWidth: '400px',
-                background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)',
-                zIndex: 999,
+                background: 'var(--col-accent)',
+                color: '#0a0a0a',
+                border: 'none',
+                width: '50px',
+                height: '50px',
+                borderRadius: '10px',
                 display: 'flex',
-                flexDirection: 'column',
-                padding: '2rem',
-                boxShadow: '-10px 0 50px rgba(0,0,0,0.5)',
-                overflowY: 'auto'
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '1.5rem',
+                fontWeight: 'bold',
+                boxShadow: '0 4px 15px rgba(198, 168, 124, 0.4)'
               }}
             >
-              {/* Header del menú */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', paddingBottom: '1.5rem', borderBottom: '1px solid rgba(198, 168, 124, 0.2)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <img src="/logo.png" alt="Meliflu" style={{ height: '35px' }} />
-                  <span style={{ fontSize: '1.5rem', fontFamily: 'var(--font-heading)', fontWeight: 700, color: 'white' }}>Meliflu</span>
-                </div>
-                <button 
-                  onClick={() => setMenuOpen(false)} 
-                  style={{ 
-                    background: 'rgba(198, 168, 124, 0.1)',
-                    color: 'var(--col-accent)', 
-                    border: '1px solid var(--col-accent)',
-                    width: '45px',
-                    height: '45px',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease'
-                  }}
-                  onMouseDown={(e) => e.currentTarget.style.background = 'var(--col-accent)'}
-                  onMouseUp={(e) => e.currentTarget.style.background = 'rgba(198, 168, 124, 0.1)'}
-                >
-                  <X size={24} strokeWidth={2.5} />
-                </button>
-              </div>
-              
-              {/* Navigation Links */}
-              <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                {navLinks.map((link, index) => (
-                  <motion.a
-                    key={link.name}
-                    href={link.href}
-                    onClick={(e) => {
-                      setMenuOpen(false);
-                      setTimeout(() => {
-                        const element = document.querySelector(link.href);
-                        if (element) {
-                          element.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }, 300);
-                    }}
-                    initial={{ x: 50, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: index * 0.1, type: 'spring', stiffness: 100 }}
-                    style={{ 
-                      fontSize: '1.5rem', 
-                      fontFamily: 'var(--font-heading)',
-                      padding: '1.2rem 1.5rem',
-                      borderRadius: '12px',
-                      background: 'rgba(255, 255, 255, 0.02)',
-                      border: '1px solid rgba(255, 255, 255, 0.05)',
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      transition: 'all 0.3s ease',
-                      textDecoration: 'none',
-                      position: 'relative',
-                      overflow: 'hidden'
-                    }}
-                    onMouseDown={(e) => {
-                      e.currentTarget.style.background = 'rgba(198, 168, 124, 0.15)';
-                      e.currentTarget.style.borderColor = 'var(--col-accent)';
-                      e.currentTarget.style.transform = 'translateX(10px)';
-                    }}
-                    onMouseUp={(e) => {
-                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
-                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
-                      e.currentTarget.style.transform = 'translateX(0)';
-                    }}
-                    onTouchStart={(e) => {
-                      e.currentTarget.style.background = 'rgba(198, 168, 124, 0.15)';
-                      e.currentTarget.style.borderColor = 'var(--col-accent)';
-                      e.currentTarget.style.transform = 'translateX(10px)';
-                    }}
-                    onTouchEnd={(e) => {
-                      setTimeout(() => {
-                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
-                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
-                        e.currentTarget.style.transform = 'translateX(0)';
-                      }, 150);
-                    }}
-                  >
-                    <span>{link.name}</span>
-                    <ArrowRight size={20} style={{ color: 'var(--col-accent)', opacity: 0.6 }} />
-                  </motion.a>
-                ))}
-              </nav>
-              
-              {/* Footer info */}
-              <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(198, 168, 124, 0.2)', fontSize: '0.85rem', color: 'var(--col-text-muted)', textAlign: 'center' }}>
-                <p style={{ margin: 0 }}>Arquitectura Interior Premium</p>
-                <p style={{ margin: '0.5rem 0 0 0', color: 'var(--col-accent)' }}>Meliflu Design Studio</p>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+              <X size={28} strokeWidth={3} />
+            </button>
+          </div>
+          
+          {/* Links de navegación */}
+          <nav style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '1rem',
+            flex: 1 
+          }}>
+            {navLinks.map((link) => (
+              <a
+                key={link.name}
+                href={link.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMenuOpen(false);
+                  setTimeout(() => {
+                    const element = document.querySelector(link.href);
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }, 100);
+                }}
+                style={{ 
+                  fontSize: '1.8rem', 
+                  fontFamily: 'var(--font-heading)',
+                  fontWeight: 600,
+                  padding: '1.5rem 1.5rem',
+                  background: 'rgba(198, 168, 124, 0.1)',
+                  border: '2px solid rgba(198, 168, 124, 0.3)',
+                  borderRadius: '12px',
+                  color: 'white',
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  transition: 'all 0.2s ease',
+                  cursor: 'pointer'
+                }}
+                onTouchStart={(e) => {
+                  e.currentTarget.style.background = 'var(--col-accent)';
+                  e.currentTarget.style.color = '#0a0a0a';
+                  e.currentTarget.style.transform = 'scale(0.98)';
+                }}
+                onTouchEnd={(e) => {
+                  e.currentTarget.style.background = 'rgba(198, 168, 124, 0.1)';
+                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.transform = 'scale(1)';
+                }}
+              >
+                <span>{link.name}</span>
+                <ArrowRight size={24} style={{ color: 'var(--col-accent)' }} />
+              </a>
+            ))}
+          </nav>
+          
+          {/* Footer */}
+          <div style={{ 
+            marginTop: '2rem',
+            paddingTop: '1.5rem',
+            borderTop: '1px solid rgba(198, 168, 124, 0.3)',
+            textAlign: 'center',
+            color: 'rgba(255,255,255,0.6)',
+            fontSize: '0.9rem'
+          }}>
+            <p style={{ margin: 0 }}>✨ Arquitectura Interior Premium</p>
+            <p style={{ margin: '0.5rem 0 0', color: 'var(--col-accent)', fontWeight: 600 }}>
+              Meliflu Design Studio
+            </p>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
