@@ -119,7 +119,7 @@ const Hero = () => {
             {content.hero.subtitle}
           </p>
 
-          <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }} className="button-group">
             <a href={`https://wa.me/${cleanWhatsApp(content.contact.whatsapp)}?text=Hola,%20me%20interesa%20cotizar%20un%20proyecto`} target="_blank" rel="noopener noreferrer" className="btn-primary">
               {content.hero.cta} <ArrowRight size={18} style={{ marginLeft: '8px', verticalAlign: 'middle' }} />
             </a>
@@ -143,7 +143,7 @@ const About = () => {
   const { content } = useContent();
   return (
     <section id="about" className="section" style={{ background: 'var(--col-surface)' }}>
-      <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '6rem', alignItems: 'center' }}>
+      <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '6rem', alignItems: 'center' }} className="grid-2-col">
         <div>
           <span style={{ color: 'var(--col-accent)', textTransform: 'uppercase', letterSpacing: '3px', fontSize: '0.9rem', display: 'block', marginBottom: '1rem' }}>Nosotros</span>
           <h2 className="heading-lg" style={{ marginBottom: '2rem' }}>{content.about.title}</h2>
@@ -154,7 +154,7 @@ const About = () => {
             {content.about.text2}
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }} className="stats-grid">
             <div>
               <h4 style={{ fontSize: '3rem', color: 'var(--col-accent)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>{content.about.stat1}</h4>
               <p style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>{content.about.stat1Label}</p>
@@ -174,7 +174,7 @@ const About = () => {
           >
             <img src="/hero.png" alt="Nosotros Meliflu" style={{ width: '100%', borderRadius: '4px', filter: 'grayscale(10%) contrast(110%)' }} />
           </motion.div>
-          <div style={{ position: 'absolute', top: '-2rem', right: '-2rem', width: '100%', height: '100%', border: '1px solid var(--col-accent)', zIndex: 1, opacity: 0.3 }}></div>
+          <div style={{ position: 'absolute', top: '-2rem', right: '-2rem', width: '100%', height: '100%', border: '1px solid var(--col-accent)', zIndex: 1, opacity: 0.3 }} className="hidden-mobile"></div>
         </div>
       </div>
     </section>
@@ -198,6 +198,7 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         style={{ background: 'var(--col-surface)', padding: '3rem', maxWidth: '600px', width: '100%', position: 'relative', borderRadius: '4px', border: '1px solid #333', maxHeight: '90vh', overflowY: 'auto' }}
+        className="modal-content"
       >
         <button onClick={onClose} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'none', color: 'white' }}><CloseIcon /></button>
         <span style={{ color: 'var(--col-accent)', fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '2px' }}>Detalles del Servicio</span>
@@ -226,10 +227,11 @@ const ServiceCard = ({ number, title, desc, img, align = 'left', onOpen }) => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.8 }}
-      style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center', marginBottom: '8rem' }}
+      style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '4rem', alignItems: 'center', marginBottom: '8rem' }}
+      className="services-grid"
     >
       <div style={{ order: align === 'right' ? 2 : 1 }}>
-        <div style={{ overflow: 'hidden', borderRadius: '4px', position: 'relative', height: '500px' }}>
+        <div style={{ overflow: 'hidden', borderRadius: '4px', position: 'relative', height: '400px' }}>
           <motion.img
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.6 }}
@@ -245,8 +247,8 @@ const ServiceCard = ({ number, title, desc, img, align = 'left', onOpen }) => {
         </div>
       </div>
 
-      <div style={{ order: align === 'right' ? 1 : 2, padding: '0 2rem' }}>
-        <span style={{ color: 'var(--col-accent)', fontSize: '5rem', fontFamily: 'var(--font-heading)', opacity: 0.5, lineHeight: 1, display: 'block', marginBottom: '1rem' }}>{number}</span>
+      <div style={{ order: align === 'right' ? 1 : 2, padding: '0 1rem' }}>
+        <span style={{ color: 'var(--col-accent)', fontSize: '4rem', fontFamily: 'var(--font-heading)', opacity: 0.5, lineHeight: 1, display: 'block', marginBottom: '1rem' }}>{number}</span>
         <h3 className="heading-lg" style={{ marginBottom: '1.5rem' }}>{title}</h3>
         <p style={{ fontSize: '1.1rem', color: 'var(--col-text-muted)', marginBottom: '2rem', maxWidth: '450px' }}>{desc}</p>
         <button onClick={onOpen} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', color: 'var(--col-accent)', borderBottom: '1px solid var(--col-accent)', paddingBottom: '4px', background: 'transparent', fontSize: '1rem' }}>
@@ -299,13 +301,13 @@ const Gallery = () => {
           <h2 className="heading-lg" style={{ marginTop: '1rem' }}>Detalles que Hablan</h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }} className="gallery-grid">
           {content.gallery.map((img, i) => (
             <motion.div
               key={i}
               whileHover={{ scale: 1.02, opacity: 0.8 }}
               transition={{ duration: 0.4 }}
-              style={{ height: '350px', overflow: 'hidden', borderRadius: '4px', cursor: 'pointer' }}
+              style={{ height: '300px', overflow: 'hidden', borderRadius: '4px', cursor: 'pointer' }}
             >
               <img src={img} alt={`Proyecto ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </motion.div>
@@ -325,7 +327,7 @@ const Footer = () => {
   return (
     <footer id="contact" style={{ background: '#050505', padding: '8rem 0 3rem', borderTop: '1px solid #1a1a1a' }}>
       <div className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '5rem', marginBottom: '6rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '5rem', marginBottom: '6rem' }} className="contact-grid">
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '2rem' }}>
               <img src="/logo.png" alt="Meliflu" style={{ height: '35px' }} />
@@ -367,7 +369,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div style={{ borderTop: '1px solid #1a1a1a', paddingTop: '3rem', textAlign: 'center', color: '#444', fontSize: '0.9rem', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+        <div style={{ borderTop: '1px solid #1a1a1a', paddingTop: '3rem', textAlign: 'center', color: '#444', fontSize: '0.9rem', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }} className="footer-content">
           <span>&copy; {new Date().getFullYear()} Meliflu Design Studio.</span>
           <span style={{ opacity: 0.5 }}>Designed with precision.</span>
         </div>
