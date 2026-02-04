@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { LogOut, Layout, Type, Image as ImageIcon, Briefcase, Phone, Plus, Trash2, Upload } from 'lucide-react';
 
 const Dashboard = () => {
-    const { content, updateSection, updateService, addService, deleteService, updateGallery, addGalleryImage, deleteGalleryImage } = useContent();
+    const { content, updateSection, updateService, addService, deleteService, updateGallery, addGalleryImage, deleteGalleryImage, saveChanges } = useContent();
     const [activeTab, setActiveTab] = useState('hero');
+    const [saving, setSaving] = useState(false);
+    const [saveMessage, setSaveMessage] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -19,13 +21,57 @@ const Dashboard = () => {
         navigate('/');
     };
 
-    // Función para convertir imagen a base64
+    const handleSave = async () => {
+        setSaving(true);
+        setSaveMessage('');
+        
+        const result = await saveChanges();
+        
+        if (result.success) {
+            setSaveMessage('✓ Cambios guardados correctamente');
+        } else {
+            setSaveMessage('⚠ Cambios guardados localmente. Imágenes muy grandes para Firebase.');
+        }
+        
+        setSaving(false);
+        setTimeout(() => setSaveMessage(''), 3000);
+    };
+
+    // Función para convertir y comprimir imagen a base64
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    // Redimensionar si es muy grande
+                    const maxDimension = 1200;
+                    if (width > maxDimension || height > maxDimension) {
+                        if (width > height) {
+                            height = (height / width) * maxDimension;
+                            width = maxDimension;
+                        } else {
+                            width = (width / height) * maxDimension;
+                            height = maxDimension;
+                        }
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Comprimir a JPEG con 70% de calidad
+                    resolve(canvas.toDataURL('image/jpeg', 0.7));
+                };
+                img.src = e.target.result;
+            };
+            reader.onerror = reject;
             reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
         });
     };
 
@@ -33,8 +79,8 @@ const Dashboard = () => {
     const handleServiceImageUpload = async (index, e) => {
         const file = e.target.files[0];
         if (file) {
-            if (file.size > 5000000) { // 5MB máximo
-                alert('La imagen es muy grande. Máximo 5MB.');
+            if (file.size > 10000000) { // 10MB máximo antes de comprimir
+                alert('La imagen es demasiado grande. Máximo 10MB.');
                 return;
             }
             const base64 = await convertToBase64(file);
@@ -45,9 +91,15 @@ const Dashboard = () => {
     // Manejar carga de imágenes para galería
     const handleGalleryImageUpload = async (e) => {
         const files = Array.from(e.target.files);
+        
+        if (files.length + content.gallery.length > 20) {
+            alert('Máximo 20 imágenes en la galería. Elimina algunas antes de agregar más.');
+            return;
+        }
+        
         for (const file of files) {
-            if (file.size > 5000000) {
-                alert(`${file.name} es muy grande. Máximo 5MB por imagen.`);
+            if (file.size > 10000000) {
+                alert(`${file.name} es muy grande. Máximo 10MB por imagen.`);
                 continue;
             }
             const base64 = await convertToBase64(file);
@@ -107,7 +159,32 @@ const Dashboard = () => {
 
             {/* Content */}
             <div style={{ flex: 1, padding: '3rem', overflowY: 'auto' }}>
-                <h1 style={{ marginBottom: '2rem', fontSize: '2rem' }}>Editar Contenido</h1>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                    <h1 style={{ fontSize: '2rem', margin: 0 }}>Editar Contenido</h1>
+                    <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        {saveMessage && (
+                            <span style={{ color: saveMessage.includes('✓') ? '#4ade80' : '#fbbf24', fontSize: '0.9rem' }}>
+                                {saveMessage}
+                            </span>
+                        )}
+                        <button 
+                            onClick={handleSave}
+                            disabled={saving}
+                            style={{ 
+                                padding: '12px 24px', 
+                                background: saving ? '#666' : '#c6a87c', 
+                                color: '#0a0a0a', 
+                                border: 'none', 
+                                borderRadius: '6px', 
+                                cursor: saving ? 'not-allowed' : 'pointer', 
+                                fontWeight: 'bold',
+                                fontSize: '1rem'
+                            }}
+                        >
+                            {saving ? 'Guardando...' : '💾 Guardar Cambios'}
+                        </button>
+                    </div>
+                </div>
 
                 {activeTab === 'hero' && (
                     <div style={{ background: '#141414', padding: '2rem', borderRadius: '8px' }}>
@@ -247,7 +324,10 @@ const Dashboard = () => {
                                     style={{ display: 'none' }}
                                 />
                             </label>
-                            <p style={{ color: '#666', marginTop: '0.5rem', fontSize: '0.9rem' }}>Puedes seleccionar múltiples imágenes. Máximo 5MB por imagen.</p>
+                            <p style={{ color: '#666', marginTop: '0.5rem', fontSize: '0.9rem' }}>
+                                Puedes seleccionar múltiples imágenes. Máximo 20 imágenes total. 
+                                Las imágenes se comprimen automáticamente.
+                            </p>
                         </div>
 
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem', marginTop: '2rem' }}>

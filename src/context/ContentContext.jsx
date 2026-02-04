@@ -74,23 +74,20 @@ export const ContentProvider = ({ children }) => {
         loadContent();
     }, []);
 
-    // Guardar en Firebase cuando el contenido cambie
-    useEffect(() => {
-        if (!loading) {
-            const saveContent = async () => {
-                try {
-                    const docRef = doc(db, 'website', 'content');
-                    await setDoc(docRef, content);
-                    // También guardar en localStorage como backup
-                    localStorage.setItem('meliflu_content', JSON.stringify(content));
-                } catch (error) {
-                    console.error('Error guardando contenido:', error);
-                }
-            };
-            
-            saveContent();
+    // Función manual para guardar cambios
+    const saveChanges = async () => {
+        try {
+            const docRef = doc(db, 'website', 'content');
+            await setDoc(docRef, content);
+            localStorage.setItem('meliflu_content', JSON.stringify(content));
+            return { success: true };
+        } catch (error) {
+            console.error('Error guardando contenido:', error);
+            // Si las imágenes son muy grandes, guardar solo en localStorage
+            localStorage.setItem('meliflu_content', JSON.stringify(content));
+            return { success: false, error: error.message };
         }
-    }, [content, loading]);
+    };
 
     const updateSection = (section, data) => {
         setContent(prev => ({
@@ -139,7 +136,7 @@ export const ContentProvider = ({ children }) => {
     };
 
     return (
-        <ContentContext.Provider value={{ content, updateSection, updateService, addService, deleteService, updateGallery, addGalleryImage, deleteGalleryImage }}>
+        <ContentContext.Provider value={{ content, updateSection, updateService, addService, deleteService, updateGallery, addGalleryImage, deleteGalleryImage, saveChanges }}>
             {children}
         </ContentContext.Provider>
     );
