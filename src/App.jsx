@@ -29,7 +29,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed w-full top-0 z-50 transition-all duration-500 ${scrolled ? 'bg-black/90 backdrop-blur-md py-4 shadow-lg' : 'bg-transparent py-8'}`} style={{ position: 'fixed', top: 0, width: '100%', zIndex: 1000, background: scrolled ? 'rgba(10, 10, 10, 0.95)' : 'transparent', backdropFilter: scrolled ? 'blur(10px)' : 'none', borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : 'none', padding: scrolled ? '1rem 0' : '2.5rem 0', transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }}>
+    <nav className={`fixed w-full top-0 z-50 transition-all duration-500 ${scrolled ? 'bg-black/90 backdrop-blur-md py-4 shadow-lg' : 'bg-transparent py-8'}`} style={{ position: 'fixed', top: 0, width: '100%', zIndex: 1000, background: scrolled ? 'rgba(10, 10, 10, 0.95)' : 'rgba(10, 10, 10, 0.5)', backdropFilter: 'blur(10px)', borderBottom: scrolled ? '1px solid rgba(255,255,255,0.05)' : 'none', padding: scrolled ? '1rem 0' : '2.5rem 0', transition: 'all 0.5s cubic-bezier(0.4, 0, 0.2, 1)' }}>
       <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <a href="#" className="logo" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <img src="/logo.png" alt="Meliflu" style={{ height: '45px' }} />
@@ -44,8 +44,25 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu Toggle */}
-        <button onClick={() => setMenuOpen(!menuOpen)} style={{ background: 'none', color: 'white', display: 'none' }} className="show-mobile">
-          {menuOpen ? <X size={28} /> : <Menu size={28} />}
+        <button 
+          onClick={() => setMenuOpen(!menuOpen)} 
+          style={{ 
+            background: 'var(--col-accent)', 
+            color: '#0a0a0a', 
+            display: 'none', 
+            width: '50px', 
+            height: '50px', 
+            borderRadius: '8px',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 4px 12px rgba(198, 168, 124, 0.3)',
+            border: 'none',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease'
+          }} 
+          className="show-mobile"
+        >
+          {menuOpen ? <X size={28} strokeWidth={2.5} /> : <Menu size={28} strokeWidth={2.5} />}
         </button>
       </div>
 

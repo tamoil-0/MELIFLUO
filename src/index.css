@@ -154,6 +154,32 @@ button {
     display: block !important;
   }
 
+  /* Hamburger menu button styling */
+  button.show-mobile {
+    display: flex !important;
+    position: relative;
+    z-index: 1001;
+  }
+
+  button.show-mobile:active {
+    transform: scale(0.95);
+  }
+
+  /* Mobile navbar adjustments */
+  nav {
+    background: rgba(10, 10, 10, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    padding: 1rem 0 !important;
+  }
+
+  nav .logo img {
+    height: 35px !important;
+  }
+
+  nav .logo span {
+    font-size: 1.5rem !important;
+  }
+
   .btn-primary,
   .btn-outline {
     width: 100%;
