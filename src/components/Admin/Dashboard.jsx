@@ -38,7 +38,7 @@ const Dashboard = () => {
         setTimeout(() => setSaveMessage(''), 3000);
     };
 
-    // Función para convertir y comprimir imagen a base64 (máxima compresión)
+    // Función para convertir y comprimir imagen a base64 (máxima compresión para Firebase)
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -49,8 +49,8 @@ const Dashboard = () => {
                     let width = img.width;
                     let height = img.height;
                     
-                    // Redimensionar a tamaño más pequeño para ahorrar espacio
-                    const maxDimension = 800;
+                    // Redimensionar a 600px para ocupar menos espacio
+                    const maxDimension = 600;
                     if (width > maxDimension || height > maxDimension) {
                         if (width > height) {
                             height = (height / width) * maxDimension;
@@ -66,8 +66,8 @@ const Dashboard = () => {
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    // Comprimir a JPEG con 40% de calidad (máxima compresión)
-                    resolve(canvas.toDataURL('image/jpeg', 0.4));
+                    // Comprimir a 25% de calidad para máxima compresión
+                    resolve(canvas.toDataURL('image/jpeg', 0.25));
                 };
                 img.src = e.target.result;
             };
@@ -93,8 +93,11 @@ const Dashboard = () => {
     const handleGalleryImageUpload = async (e) => {
         const files = Array.from(e.target.files);
         
-        if (files.length + content.gallery.length > 12) {
-            alert('Máximo 12 imágenes en la galería. Elimina algunas antes de agregar más.');
+        // Contar cuántas imágenes desde PC ya hay (no URLs)
+        const base64Images = content.gallery.filter(img => img.startsWith('data:image'));
+        
+        if (base64Images.length + files.length > 8) {
+            alert(`Máximo 8 imágenes desde PC. Ya tienes ${base64Images.length}. Usa URLs para más imágenes.`);
             return;
         }
         
@@ -350,7 +353,7 @@ const Dashboard = () => {
                                 />
                             </label>
                             <p style={{ color: '#666', marginTop: '0.5rem', fontSize: '0.9rem' }}>
-                                Máximo 12 imágenes desde PC. Se comprimen automáticamente.
+                                <strong>Máximo 8 imágenes desde PC.</strong> Para más imágenes, usa URLs abajo.
                             </p>
                         </div>
 
