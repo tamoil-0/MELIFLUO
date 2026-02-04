@@ -8,6 +8,7 @@ const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('hero');
     const [saving, setSaving] = useState(false);
     const [saveMessage, setSaveMessage] = useState('');
+    const [urlInput, setUrlInput] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -104,6 +105,28 @@ const Dashboard = () => {
             }
             const base64 = await convertToBase64(file);
             addGalleryImage(base64);
+        }
+    };
+    
+    // Agregar imagen por URL
+    const handleAddByUrl = () => {
+        if (!urlInput.trim()) {
+            alert('Ingresa una URL válida');
+            return;
+        }
+        
+        if (content.gallery.length >= 50) {
+            alert('Máximo 50 imágenes en la galería');
+            return;
+        }
+        
+        // Verificar que sea una URL válida
+        try {
+            new URL(urlInput);
+            addGalleryImage(urlInput);
+            setUrlInput('');
+        } catch {
+            alert('URL inválida. Debe ser una URL completa como https://...');
         }
     };
 
@@ -312,10 +335,12 @@ const Dashboard = () => {
 
                 {activeTab === 'gallery' && (
                     <div style={{ background: '#141414', padding: '2rem', borderRadius: '8px' }}>
+                        <h3 style={{ marginBottom: '1.5rem' }}>Gestión de Galería</h3>
+                        
                         <div style={{ marginBottom: '2rem' }}>
                             <label style={{ display: 'inline-block', padding: '12px 24px', background: '#c6a87c', color: '#0a0a0a', borderRadius: '4px', cursor: 'pointer', fontSize: '1rem', fontWeight: 600 }}>
                                 <Upload size={18} style={{ verticalAlign: 'middle', marginRight: '10px' }} />
-                                Subir Imágenes desde PC
+                                Subir desde PC
                                 <input 
                                     type="file" 
                                     accept="image/*" 
@@ -325,9 +350,53 @@ const Dashboard = () => {
                                 />
                             </label>
                             <p style={{ color: '#666', marginTop: '0.5rem', fontSize: '0.9rem' }}>
-                                Puedes seleccionar múltiples imágenes. Máximo 12 imágenes total. 
-                                Las imágenes se comprimen automáticamente a 800px.
+                                Máximo 12 imágenes desde PC. Se comprimen automáticamente.
                             </p>
+                        </div>
+
+                        <div style={{ marginBottom: '2rem', padding: '1.5rem', background: '#0a0a0a', borderRadius: '8px', border: '1px solid #333' }}>
+                            <h4 style={{ marginBottom: '1rem', color: '#c6a87c', fontSize: '1rem' }}>
+                                ⭐ Agregar por URL (recomendado - sin límite)
+                            </h4>
+                            <p style={{ color: '#666', fontSize: '0.85rem', marginBottom: '1rem' }}>
+                                Sube tus imágenes a <a href="https://imgbb.com" target="_blank" rel="noopener noreferrer" style={{ color: '#c6a87c' }}>ImgBB</a> o 
+                                <a href="https://imgur.com" target="_blank" rel="noopener noreferrer" style={{ color: '#c6a87c' }}> Imgur</a>, 
+                                copia el link directo y pégalo aquí:
+                            </p>
+                            <div style={{ display: 'flex', gap: '1rem' }}>
+                                <input 
+                                    type="text"
+                                    placeholder="https://i.imgur.com/ejemplo.jpg"
+                                    value={urlInput}
+                                    onChange={(e) => setUrlInput(e.target.value)}
+                                    onKeyPress={(e) => e.key === 'Enter' && handleAddByUrl()}
+                                    style={{ 
+                                        flex: 1, 
+                                        padding: '12px', 
+                                        background: '#141414', 
+                                        border: '1px solid #333', 
+                                        borderRadius: '4px', 
+                                        color: 'white' 
+                                    }}
+                                />
+                                <button 
+                                    onClick={handleAddByUrl}
+                                    style={{ 
+                                        padding: '12px 24px', 
+                                        background: '#c6a87c', 
+                                        color: '#0a0a0a', 
+                                        border: 'none', 
+                                        borderRadius: '4px', 
+                                        cursor: 'pointer', 
+                                        fontWeight: 'bold',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '8px'
+                                    }}
+                                >
+                                    <Plus size={18} /> Agregar
+                                </button>
+                            </div>
                         </div>
 
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '1rem', marginTop: '2rem' }}>
