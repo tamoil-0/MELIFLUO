@@ -37,7 +37,7 @@ const Dashboard = () => {
         setTimeout(() => setSaveMessage(''), 3000);
     };
 
-    // Función para convertir y comprimir imagen a base64
+    // Función para convertir y comprimir imagen a base64 (máxima compresión)
     const convertToBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -48,8 +48,8 @@ const Dashboard = () => {
                     let width = img.width;
                     let height = img.height;
                     
-                    // Redimensionar si es muy grande
-                    const maxDimension = 1200;
+                    // Redimensionar a tamaño más pequeño para ahorrar espacio
+                    const maxDimension = 800;
                     if (width > maxDimension || height > maxDimension) {
                         if (width > height) {
                             height = (height / width) * maxDimension;
@@ -65,8 +65,8 @@ const Dashboard = () => {
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    // Comprimir a JPEG con 70% de calidad
-                    resolve(canvas.toDataURL('image/jpeg', 0.7));
+                    // Comprimir a JPEG con 40% de calidad (máxima compresión)
+                    resolve(canvas.toDataURL('image/jpeg', 0.4));
                 };
                 img.src = e.target.result;
             };
@@ -92,8 +92,8 @@ const Dashboard = () => {
     const handleGalleryImageUpload = async (e) => {
         const files = Array.from(e.target.files);
         
-        if (files.length + content.gallery.length > 20) {
-            alert('Máximo 20 imágenes en la galería. Elimina algunas antes de agregar más.');
+        if (files.length + content.gallery.length > 12) {
+            alert('Máximo 12 imágenes en la galería. Elimina algunas antes de agregar más.');
             return;
         }
         
@@ -325,8 +325,8 @@ const Dashboard = () => {
                                 />
                             </label>
                             <p style={{ color: '#666', marginTop: '0.5rem', fontSize: '0.9rem' }}>
-                                Puedes seleccionar múltiples imágenes. Máximo 20 imágenes total. 
-                                Las imágenes se comprimen automáticamente.
+                                Puedes seleccionar múltiples imágenes. Máximo 12 imágenes total. 
+                                Las imágenes se comprimen automáticamente a 800px.
                             </p>
                         </div>
 
