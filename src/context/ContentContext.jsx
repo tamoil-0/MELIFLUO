@@ -1,4 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { db } from '../firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 const ContentContext = createContext();
 
@@ -40,16 +42,55 @@ export const ContentProvider = ({ children }) => {
         }
     };
 
-    // Load from LocalStorage or use default
-    const [content, setContent] = useState(() => {
-        const saved = localStorage.getItem('meliflu_content');
-        return saved ? JSON.parse(saved) : defaultContent;
-    });
+    // Load from Firebase or use default
+    const [content, setContent] = useState(defaultContent);
+    const [loading, setLoading] = useState(true);
 
-    // Save to LocalStorage whenever content changes
+    // Cargar contenido desde Firebase al iniciar
     useEffect(() => {
-        localStorage.setItem('meliflu_content', JSON.stringify(content));
-    }, [content]);
+        const loadContent = async () => {
+            try {
+                const docRef = doc(db, 'website', 'content');
+                const docSnap = await getDoc(docRef);
+                
+                if (docSnap.exists()) {
+                    setContent(docSnap.data());
+                } else {
+                    // Si no existe, crear el documento con valores por defecto
+                    await setDoc(docRef, defaultContent);
+                }
+            } catch (error) {
+                console.error('Error cargando contenido:', error);
+                // Si hay error, usar localStorage como fallback
+                const saved = localStorage.getItem('meliflu_content');
+                if (saved) {
+                    setContent(JSON.parse(saved));
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        loadContent();
+    }, []);
+
+    // Guardar en Firebase cuando el contenido cambie
+    useEffect(() => {
+        if (!loading) {
+            const saveContent = async () => {
+                try {
+                    const docRef = doc(db, 'website', 'content');
+                    await setDoc(docRef, content);
+                    // También guardar en localStorage como backup
+                    localStorage.setItem('meliflu_content', JSON.stringify(content));
+                } catch (error) {
+                    console.error('Error guardando contenido:', error);
+                }
+            };
+            
+            saveContent();
+        }
+    }, [content, loading]);
 
     const updateSection = (section, data) => {
         setContent(prev => ({
