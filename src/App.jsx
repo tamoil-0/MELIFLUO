@@ -69,65 +69,142 @@ const Navbar = () => {
       {/* Mobile Nav Overlay */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{ position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.98)', zIndex: 999, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}
-          >
-            <button 
-              onClick={() => setMenuOpen(false)} 
+          <>
+            {/* Background Overlay with blur */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMenuOpen(false)}
               style={{ 
-                position: 'absolute', 
-                top: '2rem', 
-                right: '2rem', 
-                background: 'var(--col-accent)', 
-                color: '#0a0a0a',
-                width: '50px',
-                height: '50px',
-                borderRadius: '8px',
+                position: 'fixed', 
+                inset: 0, 
+                background: 'rgba(0, 0, 0, 0.95)', 
+                backdropFilter: 'blur(20px)',
+                zIndex: 998
+              }}
+            />
+            
+            {/* Menu Content */}
+            <motion.div
+              initial={{ x: '100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              style={{ 
+                position: 'fixed',
+                top: 0,
+                right: 0,
+                bottom: 0,
+                width: '85%',
+                maxWidth: '400px',
+                background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%)',
+                zIndex: 999,
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 4px 12px rgba(198, 168, 124, 0.3)'
+                flexDirection: 'column',
+                padding: '2rem',
+                boxShadow: '-10px 0 50px rgba(0,0,0,0.5)',
+                overflowY: 'auto'
               }}
             >
-              <X size={28} strokeWidth={2.5} />
-            </button>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', textAlign: 'center', width: '100%', maxWidth: '400px' }}>
-              {navLinks.map((link, index) => (
-                <motion.a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setMenuOpen(false)}
-                  initial={{ y: 30, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: index * 0.1 }}
+              {/* Header del menú */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '3rem', paddingBottom: '1.5rem', borderBottom: '1px solid rgba(198, 168, 124, 0.2)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <img src="/logo.png" alt="Meliflu" style={{ height: '35px' }} />
+                  <span style={{ fontSize: '1.5rem', fontFamily: 'var(--font-heading)', fontWeight: 700, color: 'white' }}>Meliflu</span>
+                </div>
+                <button 
+                  onClick={() => setMenuOpen(false)} 
                   style={{ 
-                    fontSize: '2rem', 
-                    fontFamily: 'var(--font-heading)',
-                    padding: '1rem',
-                    borderBottom: '1px solid rgba(198, 168, 124, 0.2)',
-                    transition: 'all 0.3s ease',
-                    color: 'white'
+                    background: 'rgba(198, 168, 124, 0.1)',
+                    color: 'var(--col-accent)', 
+                    border: '1px solid var(--col-accent)',
+                    width: '45px',
+                    height: '45px',
+                    borderRadius: '8px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
                   }}
-                  onMouseEnter={(e) => {
-                    e.target.style.color = 'var(--col-accent)';
-                    e.target.style.borderBottomColor = 'var(--col-accent)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.color = 'white';
-                    e.target.style.borderBottomColor = 'rgba(198, 168, 124, 0.2)';
-                  }}
+                  onMouseDown={(e) => e.currentTarget.style.background = 'var(--col-accent)'}
+                  onMouseUp={(e) => e.currentTarget.style.background = 'rgba(198, 168, 124, 0.1)'}
                 >
-                  {link.name}
-                </motion.a>
-              ))}
-            </div>
-          </motion.div>
+                  <X size={24} strokeWidth={2.5} />
+                </button>
+              </div>
+              
+              {/* Navigation Links */}
+              <nav style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {navLinks.map((link, index) => (
+                  <motion.a
+                    key={link.name}
+                    href={link.href}
+                    onClick={(e) => {
+                      setMenuOpen(false);
+                      setTimeout(() => {
+                        const element = document.querySelector(link.href);
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }, 300);
+                    }}
+                    initial={{ x: 50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: index * 0.1, type: 'spring', stiffness: 100 }}
+                    style={{ 
+                      fontSize: '1.5rem', 
+                      fontFamily: 'var(--font-heading)',
+                      padding: '1.2rem 1.5rem',
+                      borderRadius: '12px',
+                      background: 'rgba(255, 255, 255, 0.02)',
+                      border: '1px solid rgba(255, 255, 255, 0.05)',
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      transition: 'all 0.3s ease',
+                      textDecoration: 'none',
+                      position: 'relative',
+                      overflow: 'hidden'
+                    }}
+                    onMouseDown={(e) => {
+                      e.currentTarget.style.background = 'rgba(198, 168, 124, 0.15)';
+                      e.currentTarget.style.borderColor = 'var(--col-accent)';
+                      e.currentTarget.style.transform = 'translateX(10px)';
+                    }}
+                    onMouseUp={(e) => {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                      e.currentTarget.style.transform = 'translateX(0)';
+                    }}
+                    onTouchStart={(e) => {
+                      e.currentTarget.style.background = 'rgba(198, 168, 124, 0.15)';
+                      e.currentTarget.style.borderColor = 'var(--col-accent)';
+                      e.currentTarget.style.transform = 'translateX(10px)';
+                    }}
+                    onTouchEnd={(e) => {
+                      setTimeout(() => {
+                        e.currentTarget.style.background = 'rgba(255, 255, 255, 0.02)';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                        e.currentTarget.style.transform = 'translateX(0)';
+                      }, 150);
+                    }}
+                  >
+                    <span>{link.name}</span>
+                    <ArrowRight size={20} style={{ color: 'var(--col-accent)', opacity: 0.6 }} />
+                  </motion.a>
+                ))}
+              </nav>
+              
+              {/* Footer info */}
+              <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(198, 168, 124, 0.2)', fontSize: '0.85rem', color: 'var(--col-text-muted)', textAlign: 'center' }}>
+                <p style={{ margin: 0 }}>Arquitectura Interior Premium</p>
+                <p style={{ margin: '0.5rem 0 0 0', color: 'var(--col-accent)' }}>Meliflu Design Studio</p>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </nav>
