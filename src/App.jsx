@@ -73,22 +73,59 @@ const Navbar = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            style={{ position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.98)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            style={{ position: 'fixed', inset: 0, background: 'rgba(10,10,10,0.98)', zIndex: 999, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}
           >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', textAlign: 'center' }}>
-              {navLinks.map((link) => (
+            <button 
+              onClick={() => setMenuOpen(false)} 
+              style={{ 
+                position: 'absolute', 
+                top: '2rem', 
+                right: '2rem', 
+                background: 'var(--col-accent)', 
+                color: '#0a0a0a',
+                width: '50px',
+                height: '50px',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: 'none',
+                cursor: 'pointer',
+                boxShadow: '0 4px 12px rgba(198, 168, 124, 0.3)'
+              }}
+            >
+              <X size={28} strokeWidth={2.5} />
+            </button>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', textAlign: 'center', width: '100%', maxWidth: '400px' }}>
+              {navLinks.map((link, index) => (
                 <motion.a
                   key={link.name}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  style={{ fontSize: '2rem', fontFamily: 'var(--font-heading)' }}
+                  initial={{ y: 30, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: index * 0.1 }}
+                  style={{ 
+                    fontSize: '2rem', 
+                    fontFamily: 'var(--font-heading)',
+                    padding: '1rem',
+                    borderBottom: '1px solid rgba(198, 168, 124, 0.2)',
+                    transition: 'all 0.3s ease',
+                    color: 'white'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.color = 'var(--col-accent)';
+                    e.target.style.borderBottomColor = 'var(--col-accent)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.color = 'white';
+                    e.target.style.borderBottomColor = 'rgba(198, 168, 124, 0.2)';
+                  }}
                 >
                   {link.name}
                 </motion.a>
               ))}
-              <button onClick={() => setMenuOpen(false)} style={{ marginTop: '2rem', background: 'none', color: 'var(--col-text-muted)' }}><X size={40} /></button>
             </div>
           </motion.div>
         )}
