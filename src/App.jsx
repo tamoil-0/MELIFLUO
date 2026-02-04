@@ -1,13 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Menu, X, ArrowRight, CheckCircle, Instagram, Facebook, Mail, Phone, MapPin, ExternalLink, X as CloseIcon } from 'lucide-react';
 import './index.css';
+import { ContentProvider, useContent } from './context/ContentContext';
+import Login from './components/Admin/Login';
+import Dashboard from './components/Admin/Dashboard';
 
 // --- Components ---
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const { content } = useContent();
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -79,6 +84,12 @@ const Hero = () => {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 500], [0, 150]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const { content } = useContent();
+
+  // Limpiar número de WhatsApp (solo dígitos)
+  const cleanWhatsApp = (number) => {
+    return number ? number.replace(/\D/g, '') : '';
+  };
 
   return (
     <section id="hero" style={{ height: '100vh', position: 'relative', display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
@@ -101,21 +112,21 @@ const Hero = () => {
           </div>
 
           <h1 className="heading-xl" style={{ marginBottom: '2rem', lineHeight: 1.1 }}>
-            Diseño que <span style={{ fontStyle: 'italic', fontFamily: 'var(--font-heading)', fontWeight: 400, color: 'var(--col-accent)' }}>inspira</span>,<br />
-            espacios que <span style={{ fontStyle: 'italic', fontFamily: 'var(--font-heading)', fontWeight: 400, color: 'var(--col-text-main)' }}>perduran.</span>
+            {content.hero.title}
           </h1>
 
           <p style={{ fontSize: '1.25rem', color: 'var(--col-text-muted)', marginBottom: '3.5rem', maxWidth: '550px', lineHeight: 1.8 }}>
-            Transformamos melamina y madera en piezas de arte funcional. Especialistas en optimización de espacios residenciales y comerciales.
+            {content.hero.subtitle}
           </p>
 
           <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <a href="https://wa.me/51999999999" target="_blank" className="btn-primary">
-              Cotizar Proyecto <ArrowRight size={18} style={{ marginLeft: '8px', verticalAlign: 'middle' }} />
+            <a href={`https://wa.me/${cleanWhatsApp(content.contact.whatsapp)}?text=Hola,%20me%20interesa%20cotizar%20un%20proyecto`} target="_blank" rel="noopener noreferrer" className="btn-primary">
+              {content.hero.cta} <ArrowRight size={18} style={{ marginLeft: '8px', verticalAlign: 'middle' }} />
             </a>
             <a href="#gallery" onClick={(e) => {
               e.preventDefault();
-              document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+              const el = document.getElementById('gallery');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
             }} className="btn-outline">Ver Portafolio</a>
           </div>
         </motion.div>
@@ -129,27 +140,28 @@ const Hero = () => {
 };
 
 const About = () => {
+  const { content } = useContent();
   return (
     <section id="about" className="section" style={{ background: 'var(--col-surface)' }}>
       <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '6rem', alignItems: 'center' }}>
         <div>
           <span style={{ color: 'var(--col-accent)', textTransform: 'uppercase', letterSpacing: '3px', fontSize: '0.9rem', display: 'block', marginBottom: '1rem' }}>Nosotros</span>
-          <h2 className="heading-lg" style={{ marginBottom: '2rem' }}>Minimalismo y <br /> <span style={{ color: 'var(--col-accent)' }}>Funcionalidad.</span></h2>
+          <h2 className="heading-lg" style={{ marginBottom: '2rem' }}>{content.about.title}</h2>
           <p style={{ fontSize: '1.1rem', color: 'var(--col-text-muted)', marginBottom: '1.5rem', lineHeight: 1.8 }}>
-            MELIFLUO es una empresa dedicada al diseño, fabricación e instalación de muebles a medida, enfocada en hogares y negocios que buscan trascender lo común. Nuestra filosofía se basa en crear <strong>muebles funcionales, modernos y bien hechos</strong>, adaptados milimétricamente al espacio de cada cliente.
+            {content.about.text1}
           </p>
           <p style={{ fontSize: '1.1rem', color: 'var(--col-text-muted)', marginBottom: '2.5rem', lineHeight: 1.8 }}>
-            No hacemos carpintería antigua; hacemos carpintería moderna. Tu espacio fluye mejor con muebles hechos para ti. Ya sea que estés remodelando tu casa o optimizando un negocio, creamos soluciones que equilibran la estética limpia con la utilidad diaria.
+            {content.about.text2}
           </p>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
             <div>
-              <h4 style={{ fontSize: '3rem', color: 'var(--col-accent)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>+500</h4>
-              <p style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Proyectos Ejecutados</p>
+              <h4 style={{ fontSize: '3rem', color: 'var(--col-accent)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>{content.about.stat1}</h4>
+              <p style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>{content.about.stat1Label}</p>
             </div>
             <div>
-              <h4 style={{ fontSize: '3rem', color: 'var(--col-accent)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>100%</h4>
-              <p style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Personalizado</p>
+              <h4 style={{ fontSize: '3rem', color: 'var(--col-accent)', fontFamily: 'var(--font-heading)', lineHeight: 1 }}>{content.about.stat2}</h4>
+              <p style={{ fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '1px' }}>{content.about.stat2Label}</p>
             </div>
           </div>
         </div>
@@ -170,6 +182,8 @@ const About = () => {
 };
 
 const ServiceModal = ({ isOpen, onClose, service }) => {
+  const { content } = useContent();
+  const cleanWhatsApp = (number) => number ? number.replace(/\D/g, '') : '';
   if (!isOpen) return null;
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
@@ -197,7 +211,7 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
             </li>
           ))}
         </ul>
-        <a href="https://wa.me/51999999999?text=Hola,%20me%20interesa%20más%20información%20sobre%20sus%20servicios" target="_blank" className="btn-primary" style={{ width: '100%', textAlign: 'center' }}>
+        <a href={`https://wa.me/${cleanWhatsApp(content.contact.whatsapp)}?text=Hola,%20me%20interesa%20más%20información%20sobre%20${encodeURIComponent(service.title)}`} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ width: '100%', textAlign: 'center' }}>
           Consultar Disponibilidad
         </a>
       </motion.div>
@@ -245,13 +259,7 @@ const ServiceCard = ({ number, title, desc, img, align = 'left', onOpen }) => {
 
 const Services = () => {
   const [selectedService, setSelectedService] = useState(null);
-
-  const servicesList = [
-    { number: "01", title: "Cocinas Modernas", desc: "El corazón del hogar reinventado. Diseños minimalistas con sistemas de almacenamiento inteligente.", img: "/kitchen.jpg" },
-    { number: "02", title: "Closets & Walk-in", desc: "Organización de lujo. Vestidores diseñados a medida con iluminación LED integrada.", img: "/closet.jpg" },
-    { number: "03", title: "Home Office", desc: "Productividad y confort. Espacios de trabajo ergonómicos que se integran armoniosamente.", img: "/office.jpg" },
-    { number: "04", title: "Centros de TV", desc: "Entretenimiento con estilo. Paneles decorativos, listones de madera y muebles flotantes.", img: "/tv-unit.jpg" }
-  ];
+  const { content } = useContent();
 
   return (
     <section id="services" className="section" style={{ position: 'relative' }}>
@@ -265,7 +273,7 @@ const Services = () => {
           <h2 className="heading-lg" style={{ marginTop: '1rem' }}>Espacios Curados</h2>
         </motion.div>
 
-        {servicesList.map((service, index) => (
+        {content.services.map((service, index) => (
           <ServiceCard
             key={index}
             {...service}
@@ -282,6 +290,7 @@ const Services = () => {
 };
 
 const Gallery = () => {
+  const { content } = useContent();
   return (
     <section id="gallery" className="section" style={{ background: '#080808' }}>
       <div className="container">
@@ -291,7 +300,7 @@ const Gallery = () => {
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
-          {["/detail1.jpg", "/detail2.jpg", "/detail3.jpg", "/detail4.jpg", "/kitchen.jpg", "/closet.jpg"].map((img, i) => (
+          {content.gallery.map((img, i) => (
             <motion.div
               key={i}
               whileHover={{ scale: 1.02, opacity: 0.8 }}
@@ -303,7 +312,7 @@ const Gallery = () => {
           ))}
         </div>
         <div style={{ textAlign: 'center', marginTop: '4rem' }}>
-          <a href="https://wa.me/51999999999" target="_blank" className="btn-outline">Ver Más en Instagram</a>
+          <a href={content.contact.instagram} target="_blank" rel="noopener noreferrer" className="btn-outline">Ver Más en Instagram</a>
         </div>
       </div>
     </section>
@@ -311,6 +320,8 @@ const Gallery = () => {
 };
 
 const Footer = () => {
+  const { content } = useContent();
+  const cleanWhatsApp = (number) => number ? number.replace(/\D/g, '') : '';
   return (
     <footer id="contact" style={{ background: '#050505', padding: '8rem 0 3rem', borderTop: '1px solid #1a1a1a' }}>
       <div className="container">
@@ -328,17 +339,17 @@ const Footer = () => {
           <div>
             <h4 style={{ color: 'white', marginBottom: '2rem', fontSize: '1.2rem' }}>Contacto Directo</h4>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', color: 'var(--col-text-muted)' }}>
-              <a href="https://wa.me/51999999999" target="_blank" style={{ display: 'flex', alignItems: 'center', gap: '15px', color: 'inherit' }}>
+              <a href={`https://wa.me/${cleanWhatsApp(content.contact.whatsapp)}?text=Hola,%20me%20gustaría%20más%20información`} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '15px', color: 'inherit' }}>
                 <div style={{ background: 'var(--col-surface)', padding: '10px', borderRadius: '50%' }}><Phone size={20} color="var(--col-accent)" /></div>
-                +51 999 999 999
+                {content.contact.phone}
               </a>
-              <a href="mailto:proyectos@meliflu.com" style={{ display: 'flex', alignItems: 'center', gap: '15px', color: 'inherit' }}>
+              <a href={`mailto:${content.contact.email}`} style={{ display: 'flex', alignItems: 'center', gap: '15px', color: 'inherit' }}>
                 <div style={{ background: 'var(--col-surface)', padding: '10px', borderRadius: '50%' }}><Mail size={20} color="var(--col-accent)" /></div>
-                proyectos@meliflu.com
+                {content.contact.email}
               </a>
               <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
                 <div style={{ background: 'var(--col-surface)', padding: '10px', borderRadius: '50%' }}><MapPin size={20} color="var(--col-accent)" /></div>
-                Ubicación Privada, Lima
+                {content.contact.address}
               </div>
             </div>
           </div>
@@ -346,10 +357,10 @@ const Footer = () => {
           <div>
             <h4 style={{ color: 'white', marginBottom: '2rem', fontSize: '1.2rem' }}>Social</h4>
             <div style={{ display: 'flex', gap: '1rem' }}>
-              <a href="#" className="social-link" style={{ width: '50px', height: '50px', border: '1px solid #333', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', color: 'white', transition: 'all 0.3s' }}>
+              <a href={content.contact.instagram} target="_blank" rel="noopener noreferrer" className="social-link" style={{ width: '50px', height: '50px', border: '1px solid #333', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', color: 'white', transition: 'all 0.3s' }}>
                 <Instagram size={22} />
               </a>
-              <a href="#" className="social-link" style={{ width: '50px', height: '50px', border: '1px solid #333', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', color: 'white', transition: 'all 0.3s' }}>
+              <a href={content.contact.facebook} target="_blank" rel="noopener noreferrer" className="social-link" style={{ width: '50px', height: '50px', border: '1px solid #333', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', color: 'white', transition: 'all 0.3s' }}>
                 <Facebook size={22} />
               </a>
             </div>
@@ -365,9 +376,10 @@ const Footer = () => {
   );
 };
 
-function App() {
+// --- Landing Page ---
+const LandingPage = () => {
   return (
-    <div className="App">
+    <div>
       <Navbar />
       <Hero />
       <About />
@@ -375,6 +387,22 @@ function App() {
       <Gallery />
       <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <ContentProvider>
+        <div className="App">
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/admin" element={<Login />} />
+            <Route path="/admin/dashboard" element={<Dashboard />} />
+          </Routes>
+        </div>
+      </ContentProvider>
+    </Router>
   );
 }
 
