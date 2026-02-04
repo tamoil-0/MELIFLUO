@@ -66,21 +66,21 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Mobile Nav Overlay - SIMPLE Y FUNCIONAL */}
+      {/* Mobile Nav Overlay - FUNCIONAL */}
       {menuOpen && (
         <div 
           style={{ 
             position: 'fixed', 
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'rgba(0, 0, 0, 0.97)',
-            zIndex: 9999,
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '2rem 1.5rem',
-            overflowY: 'auto'
+            top: '0px',
+            left: '0px',
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: '#000000',
+            zIndex: 99999,
+            display: 'block',
+            padding: '20px',
+            boxSizing: 'border-box',
+            overflow: 'auto'
           }}
         >
           {/* Header con botón cerrar */}
@@ -88,17 +88,16 @@ const Navbar = () => {
             display: 'flex', 
             justifyContent: 'space-between', 
             alignItems: 'center',
-            marginBottom: '3rem',
-            paddingBottom: '1rem',
-            borderBottom: '2px solid var(--col-accent)'
+            marginBottom: '30px',
+            paddingBottom: '15px',
+            borderBottom: '3px solid #C6A87C'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <img src="/logo.png" alt="Meliflu" style={{ height: '40px' }} />
               <span style={{ 
-                fontSize: '1.8rem', 
-                fontFamily: 'var(--font-heading)', 
+                fontSize: '24px', 
                 fontWeight: 700, 
-                color: 'white' 
+                color: '#FFFFFF' 
               }}>
                 Meliflu
               </span>
@@ -106,8 +105,8 @@ const Navbar = () => {
             <button 
               onClick={() => setMenuOpen(false)}
               style={{ 
-                background: 'var(--col-accent)',
-                color: '#0a0a0a',
+                backgroundColor: '#C6A87C',
+                color: '#000000',
                 border: 'none',
                 width: '50px',
                 height: '50px',
@@ -115,83 +114,109 @@ const Navbar = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                cursor: 'pointer',
-                fontSize: '1.5rem',
-                fontWeight: 'bold',
-                boxShadow: '0 4px 15px rgba(198, 168, 124, 0.4)'
+                cursor: 'pointer'
               }}
             >
               <X size={28} strokeWidth={3} />
             </button>
           </div>
           
-          {/* Links de navegación */}
-          <nav style={{ 
-            display: 'flex', 
-            flexDirection: 'column', 
-            gap: '1rem',
-            flex: 1 
-          }}>
-            {navLinks.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setMenuOpen(false);
-                  setTimeout(() => {
-                    const element = document.querySelector(link.href);
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }, 100);
-                }}
-                style={{ 
-                  fontSize: '1.8rem', 
-                  fontFamily: 'var(--font-heading)',
-                  fontWeight: 600,
-                  padding: '1.5rem 1.5rem',
-                  background: 'rgba(198, 168, 124, 0.1)',
-                  border: '2px solid rgba(198, 168, 124, 0.3)',
-                  borderRadius: '12px',
-                  color: 'white',
-                  textDecoration: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  transition: 'all 0.2s ease',
-                  cursor: 'pointer'
-                }}
-                onTouchStart={(e) => {
-                  e.currentTarget.style.background = 'var(--col-accent)';
-                  e.currentTarget.style.color = '#0a0a0a';
-                  e.currentTarget.style.transform = 'scale(0.98)';
-                }}
-                onTouchEnd={(e) => {
-                  e.currentTarget.style.background = 'rgba(198, 168, 124, 0.1)';
-                  e.currentTarget.style.color = 'white';
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              >
-                <span>{link.name}</span>
-                <ArrowRight size={24} style={{ color: 'var(--col-accent)' }} />
-              </a>
-            ))}
-          </nav>
-          
-          {/* Footer */}
-          <div style={{ 
-            marginTop: '2rem',
-            paddingTop: '1.5rem',
-            borderTop: '1px solid rgba(198, 168, 124, 0.3)',
-            textAlign: 'center',
-            color: 'rgba(255,255,255,0.6)',
-            fontSize: '0.9rem'
-          }}>
-            <p style={{ margin: 0 }}>✨ Arquitectura Interior Premium</p>
-            <p style={{ margin: '0.5rem 0 0', color: 'var(--col-accent)', fontWeight: 600 }}>
-              Meliflu Design Studio
-            </p>
+          {/* Links de navegación - MUY VISIBLES */}
+          <div style={{ display: 'block' }}>
+            <a
+              href="#hero"
+              onClick={(e) => { e.preventDefault(); setMenuOpen(false); document.querySelector('#hero')?.scrollIntoView({ behavior: 'smooth' }); }}
+              style={{ 
+                display: 'block',
+                fontSize: '22px', 
+                fontWeight: 600,
+                padding: '20px',
+                marginBottom: '15px',
+                backgroundColor: 'rgba(198, 168, 124, 0.15)',
+                border: '2px solid #C6A87C',
+                borderRadius: '12px',
+                color: '#FFFFFF',
+                textDecoration: 'none'
+              }}
+            >
+              🏠 Inicio
+            </a>
+            
+            <a
+              href="#about"
+              onClick={(e) => { e.preventDefault(); setMenuOpen(false); document.querySelector('#about')?.scrollIntoView({ behavior: 'smooth' }); }}
+              style={{ 
+                display: 'block',
+                fontSize: '22px', 
+                fontWeight: 600,
+                padding: '20px',
+                marginBottom: '15px',
+                backgroundColor: 'rgba(198, 168, 124, 0.15)',
+                border: '2px solid #C6A87C',
+                borderRadius: '12px',
+                color: '#FFFFFF',
+                textDecoration: 'none'
+              }}
+            >
+              👥 Nosotros
+            </a>
+            
+            <a
+              href="#services"
+              onClick={(e) => { e.preventDefault(); setMenuOpen(false); document.querySelector('#services')?.scrollIntoView({ behavior: 'smooth' }); }}
+              style={{ 
+                display: 'block',
+                fontSize: '22px', 
+                fontWeight: 600,
+                padding: '20px',
+                marginBottom: '15px',
+                backgroundColor: 'rgba(198, 168, 124, 0.15)',
+                border: '2px solid #C6A87C',
+                borderRadius: '12px',
+                color: '#FFFFFF',
+                textDecoration: 'none'
+              }}
+            >
+              🔧 Servicios
+            </a>
+            
+            <a
+              href="#gallery"
+              onClick={(e) => { e.preventDefault(); setMenuOpen(false); document.querySelector('#gallery')?.scrollIntoView({ behavior: 'smooth' }); }}
+              style={{ 
+                display: 'block',
+                fontSize: '22px', 
+                fontWeight: 600,
+                padding: '20px',
+                marginBottom: '15px',
+                backgroundColor: 'rgba(198, 168, 124, 0.15)',
+                border: '2px solid #C6A87C',
+                borderRadius: '12px',
+                color: '#FFFFFF',
+                textDecoration: 'none'
+              }}
+            >
+              🖼️ Galería
+            </a>
+            
+            <a
+              href="#contact"
+              onClick={(e) => { e.preventDefault(); setMenuOpen(false); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
+              style={{ 
+                display: 'block',
+                fontSize: '22px', 
+                fontWeight: 600,
+                padding: '20px',
+                marginBottom: '15px',
+                backgroundColor: 'rgba(198, 168, 124, 0.15)',
+                border: '2px solid #C6A87C',
+                borderRadius: '12px',
+                color: '#FFFFFF',
+                textDecoration: 'none'
+              }}
+            >
+              📞 Contacto
+            </a>
           </div>
         </div>
       )}
