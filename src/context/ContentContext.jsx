@@ -50,18 +50,32 @@ export const ContentProvider = ({ children }) => {
     useEffect(() => {
         const loadContent = async () => {
             try {
-                const docRef = doc(db, 'website', 'content');
-                const docSnap = await getDoc(docRef);
+                // Cargar cada sección por separado
+                const heroRef = doc(db, 'website', 'hero');
+                const aboutRef = doc(db, 'website', 'about');
+                const servicesRef = doc(db, 'website', 'services');
+                const galleryRef = doc(db, 'website', 'gallery');
+                const contactRef = doc(db, 'website', 'contact');
                 
-                if (docSnap.exists()) {
-                    setContent(docSnap.data());
-                } else {
-                    // Si no existe, crear el documento con valores por defecto
-                    await setDoc(docRef, defaultContent);
-                }
+                const [heroSnap, aboutSnap, servicesSnap, gallerySnap, contactSnap] = await Promise.all([
+                    getDoc(heroRef),
+                    getDoc(aboutRef),
+                    getDoc(servicesRef),
+                    getDoc(galleryRef),
+                    getDoc(contactRef)
+                ]);
+                
+                const loadedContent = {
+                    hero: heroSnap.exists() ? heroSnap.data() : defaultContent.hero,
+                    about: aboutSnap.exists() ? aboutSnap.data() : defaultContent.about,
+                    services: servicesSnap.exists() ? servicesSnap.data().items : defaultContent.services,
+                    gallery: gallerySnap.exists() ? gallerySnap.data().items : defaultContent.gallery,
+                    contact: contactSnap.exists() ? contactSnap.data() : defaultContent.contact
+                };
+                
+                setContent(loadedContent);
             } catch (error) {
                 console.error('Error cargando contenido:', error);
-                // Si hay error, usar localStorage como fallback
                 const saved = localStorage.getItem('meliflu_content');
                 if (saved) {
                     setContent(JSON.parse(saved));
@@ -74,17 +88,35 @@ export const ContentProvider = ({ children }) => {
         loadContent();
     }, []);
 
-    // Función manual para guardar cambios
-    const saveChanges = async () => {
+    // Función manual para guardar cambios por sección
+    const saveChanges = async (section = 'all') => {
         try {
-            const docRef = doc(db, 'website', 'content');
-            await setDoc(docRef, content);
             localStorage.setItem('meliflu_content', JSON.stringify(content));
+            
+            if (section === 'all') {
+                // Guardar todo (para compatibilidad)
+                await Promise.all([
+                    setDoc(doc(db, 'website', 'hero'), content.hero),
+                    setDoc(doc(db, 'website', 'about'), content.about),
+                    setDoc(doc(db, 'website', 'services'), { items: content.services }),
+                    setDoc(doc(db, 'website', 'gallery'), { items: content.gallery }),
+                    setDoc(doc(db, 'website', 'contact'), content.contact)
+                ]);
+            } else if (section === 'hero') {
+                await setDoc(doc(db, 'website', 'hero'), content.hero);
+            } else if (section === 'about') {
+                await setDoc(doc(db, 'website', 'about'), content.about);
+            } else if (section === 'services') {
+                await setDoc(doc(db, 'website', 'services'), { items: content.services });
+            } else if (section === 'gallery') {
+                await setDoc(doc(db, 'website', 'gallery'), { items: content.gallery });
+            } else if (section === 'contact') {
+                await setDoc(doc(db, 'website', 'contact'), content.contact);
+            }
+            
             return { success: true };
         } catch (error) {
             console.error('Error guardando contenido:', error);
-            // Si las imágenes son muy grandes, guardar solo en localStorage
-            localStorage.setItem('meliflu_content', JSON.stringify(content));
             return { success: false, error: error.message };
         }
     };

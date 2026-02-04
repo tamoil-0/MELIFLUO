@@ -26,12 +26,28 @@ const Dashboard = () => {
         setSaving(true);
         setSaveMessage('');
         
-        const result = await saveChanges();
+        const result = await saveChanges('all');
         
         if (result.success) {
             setSaveMessage('✓ Cambios guardados correctamente');
         } else {
-            setSaveMessage('⚠ Cambios guardados localmente. Imágenes muy grandes para Firebase.');
+            setSaveMessage('⚠ Error al guardar. Ver consola.');
+        }
+        
+        setSaving(false);
+        setTimeout(() => setSaveMessage(''), 3000);
+    };
+    
+    const handleSaveSection = async (section, sectionName) => {
+        setSaving(true);
+        setSaveMessage('');
+        
+        const result = await saveChanges(section);
+        
+        if (result.success) {
+            setSaveMessage(`✓ ${sectionName} guardado correctamente`);
+        } else {
+            setSaveMessage(`⚠ Error al guardar ${sectionName}: ${result.error}`);
         }
         
         setSaving(false);
@@ -193,27 +209,29 @@ const Dashboard = () => {
                                 {saveMessage}
                             </span>
                         )}
-                        <button 
-                            onClick={handleSave}
-                            disabled={saving}
-                            style={{ 
-                                padding: '12px 24px', 
-                                background: saving ? '#666' : '#c6a87c', 
-                                color: '#0a0a0a', 
-                                border: 'none', 
-                                borderRadius: '6px', 
-                                cursor: saving ? 'not-allowed' : 'pointer', 
-                                fontWeight: 'bold',
-                                fontSize: '1rem'
-                            }}
-                        >
-                            {saving ? 'Guardando...' : '💾 Guardar Cambios'}
-                        </button>
                     </div>
                 </div>
 
                 {activeTab === 'hero' && (
                     <div style={{ background: '#141414', padding: '2rem', borderRadius: '8px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                            <h3 style={{ margin: 0 }}>Portada</h3>
+                            <button 
+                                onClick={() => handleSaveSection('hero', 'Portada')}
+                                disabled={saving}
+                                style={{ 
+                                    padding: '10px 20px', 
+                                    background: saving ? '#666' : '#c6a87c', 
+                                    color: '#0a0a0a', 
+                                    border: 'none', 
+                                    borderRadius: '6px', 
+                                    cursor: saving ? 'not-allowed' : 'pointer', 
+                                    fontWeight: 'bold'
+                                }}
+                            >
+                                {saving ? 'Guardando...' : '💾 Guardar Portada'}
+                            </button>
+                        </div>
                         <InputGroup
                             label="Título Principal"
                             value={content.hero.title}
@@ -235,6 +253,24 @@ const Dashboard = () => {
 
                 {activeTab === 'about' && (
                     <div style={{ background: '#141414', padding: '2rem', borderRadius: '8px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                            <h3 style={{ margin: 0 }}>Nosotros</h3>
+                            <button 
+                                onClick={() => handleSaveSection('about', 'Nosotros')}
+                                disabled={saving}
+                                style={{ 
+                                    padding: '10px 20px', 
+                                    background: saving ? '#666' : '#c6a87c', 
+                                    color: '#0a0a0a', 
+                                    border: 'none', 
+                                    borderRadius: '6px', 
+                                    cursor: saving ? 'not-allowed' : 'pointer', 
+                                    fontWeight: 'bold'
+                                }}
+                            >
+                                {saving ? 'Guardando...' : '💾 Guardar Nosotros'}
+                            </button>
+                        </div>
                         <InputGroup
                             label="Título"
                             value={content.about.title}
@@ -263,6 +299,29 @@ const Dashboard = () => {
 
                 {activeTab === 'services' && (
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <h3 style={{ margin: 0 }}>Servicios</h3>
+                            <div style={{ display: 'flex', gap: '1rem' }}>
+                                <button onClick={addService} style={{ padding: '10px 20px', background: '#2a2a2a', color: '#c6a87c', border: '1px solid #c6a87c', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <Plus size={18} /> Agregar Servicio
+                                </button>
+                                <button 
+                                    onClick={() => handleSaveSection('services', 'Servicios')}
+                                    disabled={saving}
+                                    style={{ 
+                                        padding: '10px 20px', 
+                                        background: saving ? '#666' : '#c6a87c', 
+                                        color: '#0a0a0a', 
+                                        border: 'none', 
+                                        borderRadius: '6px', 
+                                        cursor: saving ? 'not-allowed' : 'pointer', 
+                                        fontWeight: 'bold'
+                                    }}
+                                >
+                                    {saving ? 'Guardando...' : '💾 Guardar Servicios'}
+                                </button>
+                            </div>
+                        </div>
                         {content.services.map((service, index) => (
                             <div key={index} style={{ background: '#141414', padding: '2rem', borderRadius: '8px', position: 'relative' }}>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
@@ -327,18 +386,29 @@ const Dashboard = () => {
                                 </div>
                             </div>
                         ))}
-                        <button 
-                            onClick={addService}
-                            style={{ background: '#1f1f1f', border: '2px dashed #c6a87c', color: '#c6a87c', padding: '1.5rem', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', fontSize: '1rem', fontWeight: 500, cursor: 'pointer' }}
-                        >
-                            <Plus size={20} /> Agregar Nuevo Servicio
-                        </button>
                     </div>
                 )}
 
                 {activeTab === 'gallery' && (
                     <div style={{ background: '#141414', padding: '2rem', borderRadius: '8px' }}>
-                        <h3 style={{ marginBottom: '1.5rem' }}>Gestión de Galería</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+                            <h3 style={{ margin: 0 }}>Gestión de Galería</h3>
+                            <button 
+                                onClick={() => handleSaveSection('gallery', 'Galería')}
+                                disabled={saving}
+                                style={{ 
+                                    padding: '10px 20px', 
+                                    background: saving ? '#666' : '#c6a87c', 
+                                    color: '#0a0a0a', 
+                                    border: 'none', 
+                                    borderRadius: '6px', 
+                                    cursor: saving ? 'not-allowed' : 'pointer', 
+                                    fontWeight: 'bold'
+                                }}
+                            >
+                                {saving ? 'Guardando...' : '💾 Guardar Galería'}
+                            </button>
+                        </div>
                         
                         <div style={{ marginBottom: '2rem' }}>
                             <label style={{ display: 'inline-block', padding: '12px 24px', background: '#c6a87c', color: '#0a0a0a', borderRadius: '4px', cursor: 'pointer', fontSize: '1rem', fontWeight: 600 }}>
@@ -440,7 +510,24 @@ const Dashboard = () => {
 
                 {activeTab === 'contact' && (
                     <div style={{ background: '#141414', padding: '2rem', borderRadius: '8px' }}>
-                        <h3 style={{ marginBottom: '2rem', color: '#c6a87c' }}>Información de Contacto y Redes Sociales</h3>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+                            <h3 style={{ margin: 0, color: '#c6a87c' }}>Información de Contacto y Redes Sociales</h3>
+                            <button 
+                                onClick={() => handleSaveSection('contact', 'Contacto')}
+                                disabled={saving}
+                                style={{ 
+                                    padding: '10px 20px', 
+                                    background: saving ? '#666' : '#c6a87c', 
+                                    color: '#0a0a0a', 
+                                    border: 'none', 
+                                    borderRadius: '6px', 
+                                    cursor: saving ? 'not-allowed' : 'pointer', 
+                                    fontWeight: 'bold'
+                                }}
+                            >
+                                {saving ? 'Guardando...' : '💾 Guardar Contacto'}
+                            </button>
+                        </div>
                         
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
                             <InputGroup
