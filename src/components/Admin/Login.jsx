@@ -1,38 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock } from 'lucide-react';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import '../firebase';
-
-const auth = getAuth();
 
 const Login = () => {
     const [user, setUser] = useState('');
     const [pass, setPass] = useState('');
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+    const handleLogin = (e) => {
         e.preventDefault();
-        setLoading(true);
-        setError('');
         
-        try {
-            // Intenta autenticar con Firebase
-            await signInWithEmailAndPassword(auth, user, pass);
+        if (user === 'tamoil' && pass === 'tamoil12345') {
             localStorage.setItem('meliflu_auth', 'true');
             navigate('/admin/dashboard');
-        } catch (firebaseError) {
-            // Si falla Firebase, usa autenticación local como fallback
-            if (user === 'tamoil' && pass === 'tamoil12345') {
-                localStorage.setItem('meliflu_auth', 'true');
-                navigate('/admin/dashboard');
-            } else {
-                setError('Credenciales incorrectas');
-            }
-        } finally {
-            setLoading(false);
+        } else {
+            setError('Credenciales incorrectas');
         }
     };
 
@@ -66,8 +49,8 @@ const Login = () => {
                     />
                 </div>
 
-                <button type="submit" className="btn-primary" style={{ width: '100%' }} disabled={loading}>
-                    {loading ? 'Ingresando...' : 'Ingresar'}
+                <button type="submit" className="btn-primary" style={{ width: '100%' }}>
+                    Ingresar
                 </button>
             </form>
         </div>
