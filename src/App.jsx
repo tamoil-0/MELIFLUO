@@ -262,7 +262,7 @@ const About = () => {
   const { content } = useContent();
   return (
     <section id="about" className="section" style={{ background: 'var(--col-surface)' }}>
-      <div className="container" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '6rem', alignItems: 'center' }} className="grid-2-col">
+      <div className="container grid-2-col" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '6rem', alignItems: 'center' }}>
         <div>
           <span style={{ color: 'var(--col-accent)', textTransform: 'uppercase', letterSpacing: '3px', fontSize: '0.9rem', display: 'block', marginBottom: '1rem' }}>Nosotros</span>
           <h2 className="heading-lg" style={{ marginBottom: '2rem' }}>{content.about.title}</h2>
