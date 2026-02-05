@@ -33,12 +33,12 @@ export const ContentProvider = ({ children }) => {
             "/detail1.jpg", "/detail2.jpg", "/detail3.jpg", "/detail4.jpg", "/kitchen.jpg", "/closet.jpg"
         ],
         contact: {
-            phone: "+51 999 999 999",
+            phone: "+51 962 147 179",
             email: "proyectos@meliflu.com",
             address: "Ubicación Privada, Lima",
-            whatsapp: "51999999999",
-            instagram: "https://instagram.com/meliflu",
-            facebook: "https://facebook.com/meliflu"
+            whatsapp: "51962147179",
+            instagram: "https://www.instagram.com/melifluo225/",
+            facebook: "https://www.facebook.com/david.daviddavid.104855"
         }
     };
 
